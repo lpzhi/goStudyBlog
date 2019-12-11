@@ -2,6 +2,7 @@
 
   在 handler 文件夹的 handler.go 文件中增加方法GetFileMetaHandler
   
+  
   ``` sh
   func GetFileMetaHandler(w http.ResponseWriter,r *http.Request)  {
 	r.ParseForm()
@@ -20,10 +21,10 @@
 	 w.Write(data)
 }
   ```
-  
-  # 增加路由
+# 增加路由
   
     在 main.go 文件中增加路由注册
+    
 
 ``` sh
   func main()  {
