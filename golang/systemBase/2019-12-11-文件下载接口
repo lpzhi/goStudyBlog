@@ -1,0 +1,54 @@
+# 文件下载
+  在 handler 文件夹 handler.go 文件中增加方法 DownLoadHandler
+  
+  ``` sh
+  func DownLoadHandler(w http.ResponseWriter,r *http.Request){
+	r.ParseForm()
+
+	fsha1 := r.Form.Get("filehash")
+
+	fm := meta.GetFileMeta(fsha1)
+
+	f,err := os.Open(fm.Location)
+	defer f.Close()
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	data,err := ioutil.ReadAll(f)
+
+	if err != nill {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	//设置头信息
+
+	w.Header().Set("Content-Type","application/octect-stream")
+	w.Header().Set("content-disposition","attachment;filename="+fm.FileName)
+	w.Write(data)
+
+}
+  ```
+  
+  # 注册路由
+  
+    在 main.go 文件中增加 路由代码如下:
+    
+    ``` sh
+    func main()  {
+	http.HandleFunc("/file/upload",handler.UploadHandler)
+	http.HandleFunc("/file/upload/suc",handler.UploadFinish)
+	http.HandleFunc("/file/meta",handler.GetFileMetaHandler)
+	http.HandleFunc("/file/download",handler.DownLoadHandler) // 下载接口
+	err := http.ListenAndServe(":9000",nil)
+
+	if err!= nil{
+		fmt.Println("start server error:",err.Error())
+	}
+
+	fmt.Println("stat")
+}
+    ```
