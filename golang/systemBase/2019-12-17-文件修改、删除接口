@@ -1,0 +1,20 @@
+# 修改文件名
+  在 handler.go 中新增方法 FileUpdateMetaHandler 代码如下：
+  ``` sh
+  //修改文件名
+func FileUpdateMetaHandler(w http.ResponseWriter,r *http.Request)  {
+	r.ParseForm()
+
+	fileHash := r.Form.Get("fileHash")
+	newFileName := r.Form.Get("fileName")
+
+	//获取文件信息
+	metaFile := meta.GetFileMeta(fileHash)
+	metaFile.FileName = newFileName
+
+	//更新文件信息
+	meta.UpdateFileMeta(metaFile)
+
+	w.WriteHeader(http.StatusOK)
+}
+  ```
